@@ -1,0 +1,16 @@
+{
+  "name": "monobank-bot",
+  "version": "1.0.0",
+  "description": "Simple Monobank API integration with sending messages via Telegram Bot.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Taras Korpach",
+  "license": "ISC",
+  "dependencies": {
+    "currency-codes": "^2.1.0",
+    "express": "^4.19.2",
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}
