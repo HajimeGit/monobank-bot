@@ -6,11 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
   "author": "Taras Korpach",
   "license": "ISC",
   "dependencies": {
     "currency-codes": "^2.1.0",
     "express": "^4.19.2",
+    "ky": "^1.5.0",
     "node-telegram-bot-api": "^0.66.0"
   }
 }
