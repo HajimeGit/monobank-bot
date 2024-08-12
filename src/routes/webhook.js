@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.post('/set', setWebHook);
 router.get('/process', confirmWebhook);
-router.post('process', processWebhook);
+router.post('/process', processWebhook);
 
 export default router;

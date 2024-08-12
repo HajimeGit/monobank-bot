@@ -1,13 +1,12 @@
 import express from 'express';
 import router from './src/routes/webhook.js';
+import './src/services/webhookSubscriber.js';
 
 const app = express();
-
-const port = 3000;
 
 app.use(express.json());
 app.use('/webhook', router);
 
-app.listen(port, () => {
-  console.log('Running...');
+app.listen(process.env.PORT, () => {
+  console.log('Server is running...');
 });

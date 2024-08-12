@@ -1,6 +1,6 @@
 import ky from 'ky';
 import { isUrlValid } from '../utils/url.js';
-import bot from '../services/bot.js';
+import { webhookEmitter } from '../events/webhookEmitter.js';
 
 export const setWebHook = async (req, res) => {
   const { webHookUrl } = req.body;
@@ -9,11 +9,12 @@ export const setWebHook = async (req, res) => {
     return res.status(400).json({ error: 'Webhook url is not valid.' });
   }
 
+  const webhookUrl = 'https://api.monobank.ua/personal/webhook';
   const result = await ky
-    .post('https://api.monobank.ua/personal/webhook', {
+    .post(webhookUrl, {
       headers: {
         'Content-Type': 'application/json',
-        'X-Token': 'token',
+        'X-Token': process.env?.MONOBANK_API_KEY,
       },
       json: {
         webHookUrl: webHookUrl,
@@ -35,17 +36,11 @@ export const confirmWebhook = (req, res) => {
 export const processWebhook = (req, res) => {
   const data = req.body?.data;
 
-  if (data?.account && data.account === 'card_account') {
-    const statementItem = data?.statementItem;
-    const currencyCode = statementItem?.currencyCode;
-    const balance = parseNumber(statementItem?.balance, currencyCode);
-    const description = statementItem?.description;
-    const amount = parseNumber(statementItem?.amount, currencyCode);
-
-    bot.sendMessage(
-      'chat_id',
-      amount + '\n' + description + '\n' + 'Баланс ' + balance
-    );
+  if (data) {
+    webhookEmitter.emit('webhookReceived', {
+      data,
+    });
   }
-  res.send('200');
+
+  return res.status(200).send();
 };
