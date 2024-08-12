@@ -1,6 +1,6 @@
 import express from 'express';
-import router from './src/routes/webhook.js';
-import './src/services/webhookSubscriber.js';
+import router from './routes/webhook.js';
+import './services/webhookSubscriber.js';
 
 const app = express();
 

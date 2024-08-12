@@ -1,4 +1,4 @@
-import ky from 'ky';
+import got from 'got';
 import { isUrlValid } from '../utils/url.js';
 import { webhookEmitter } from '../events/webhookEmitter.js';
 
@@ -9,9 +9,9 @@ export const setWebHook = async (req, res) => {
     return res.status(400).json({ error: 'Webhook url is not valid.' });
   }
 
-  const webhookUrl = 'https://api.monobank.ua/personal/webhook';
-  const result = await ky
-    .post(webhookUrl, {
+  try {
+    const apiWebhookUrl = 'https://api.monobank.ua/personal/webhook';
+    const options = {
       headers: {
         'Content-Type': 'application/json',
         'X-Token': process.env?.MONOBANK_API_KEY,
@@ -19,13 +19,22 @@ export const setWebHook = async (req, res) => {
       json: {
         webHookUrl: webHookUrl,
       },
-    })
-    .json();
+    };
+    const response = await got.post(apiWebhookUrl, options).json();
 
-  if (result?.status === 'ok') {
-    res.status(200).json({ status: 'Webhook has been set successfully.' });
-  } else {
-    res.status(500).json({ error: 'Something went wrong. Please try again.' });
+    if (response.status === 'ok') {
+      return res
+        .status(200)
+        .json({ status: 'Webhook has been set successfully.' });
+    } else {
+      return res
+        .status(500)
+        .json({ error: 'Something went wrong. Please try again.' });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: 'Failed to set webhook. Please try again.' });
   }
 };
 
